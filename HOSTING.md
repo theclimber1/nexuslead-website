@@ -6,11 +6,10 @@ Stand: 9. September 2026. Domain `nexuslead.net` ist registriert (Namecheap).
 
 | Adresse | Inhalt |
 |---|---|
-| `dentalboost.nexuslead.net` | diese Produktseite |
-| `nexuslead.net` | später die Firmenseite; bis dahin Weiterleitung auf die Produktseite |
+| `nexuslead.net` | Firmen- und DentalBoost-Produktseite |
 
-So bleibt die DentalBoost-Adresse dauerhaft gültig, auch wenn später eine
-Firmenseite auf der Hauptdomain dazukommt.
+Die Website läuft zunächst direkt auf der Hauptdomain. Eine separate
+DentalBoost-Subdomain ist aktuell nicht nötig.
 
 ## Vor dem Livegang erledigen
 
@@ -82,14 +81,11 @@ für kostenlose E-Mail-Weiterleitung):
 ## Schritt 4: Adressen verbinden
 
 1. Im Worker-Projekt unter **Settings → Domains & Routes → Custom domains**
-   `dentalboost.nexuslead.net` hinzufügen. Cloudflare legt den DNS-Eintrag
-   automatisch an.
-2. Für die Hauptdomain eine **Redirect Rule** anlegen
-   (*Rules → Redirect Rules → Create*):
-   - Wenn `Hostname gleich nexuslead.net`
-   - Dann `Dynamic redirect` auf `concat("https://dentalboost.nexuslead.net", http.request.uri.path)`
-   - Status 302 (später auf 301 ändern, wenn die Firmenseite steht)
-3. HTTPS prüfen: Cloudflare stellt das Zertifikat automatisch aus. Die
+   `nexuslead.net` hinzufügen. Cloudflare verbindet die Apex-Domain direkt mit
+   dem Worker. Falls noch alte A- oder AAAA-Einträge für `nexuslead.net`
+   vorhanden sind, diese nach dem Hinzufügen der Custom Domain entfernen,
+   sofern sie nicht für einen anderen Dienst benötigt werden.
+2. HTTPS prüfen: Cloudflare stellt das Zertifikat automatisch aus. Die
    SSL-Option von Namecheap wird nicht benötigt.
 
 ## Schritt 5 (optional): E-Mail unter der Domain
@@ -101,7 +97,7 @@ Gmail-SMTP-Server und einem App-Passwort einrichten.
 
 ## Änderungen später
 
-Dateien in `website/` bearbeiten, committen, pushen – Cloudflare Pages baut
+Dateien in `website/` bearbeiten, committen, pushen – Cloudflare baut
 automatisch neu. Lokale Vorschau:
 
 ```bash

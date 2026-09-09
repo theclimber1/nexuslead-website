@@ -34,4 +34,4 @@ python3 -m http.server 4173
 ## Veröffentlichung
 
 Siehe `HOSTING.md`: GitHub für den Quellcode, Cloudflare Pages für die
-Auslieferung, Adresse `dentalboost.nexuslead.net`.
+Auslieferung, Adresse `nexuslead.net`.
