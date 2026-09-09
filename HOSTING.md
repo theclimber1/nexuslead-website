@@ -38,18 +38,36 @@ git commit -m "DentalBoost website"
 gh repo create nexuslead-website --public --source=. --push
 ```
 
-## Schritt 2: Cloudflare Pages
+## Schritt 2: Cloudflare Workers Builds
 
-1. Cloudflare-Konto anlegen (kostenlos), **Workers & Pages → Create → Pages →
-   Connect to Git**, das Repository `nexuslead-website` auswählen.
-2. Framework: *None*. Build command: leer. Output directory: `.`
-3. Deploy. Die Seite ist danach unter einer `*.pages.dev`-Adresse erreichbar –
-   dort zuerst beide Sprachen und die Demo prüfen.
+Cloudflare hat sein Dashboard 2026 umgestellt: Neue Projekte laufen über
+**Workers Builds** statt über das alte "Pages"-Formular. Statt eines
+"Build output directory"-Felds gibt es dort **Build command** / **Deploy
+command** / **Root directory** – gesteuert über eine `wrangler.jsonc` im
+Repository (liegt bereits bei: `wrangler.jsonc`, `.assetsignore`, `404.html`).
 
-Statische Auslieferung ist bei Cloudflare Pages unbegrenzt und kostenlos.
-GitHub Pages wäre technisch möglich, die Nutzungsbedingungen schränken den
-Betrieb kommerzieller Seiten aber ein – deshalb GitHub für den Quellcode,
-Cloudflare für die Auslieferung.
+1. Cloudflare-Konto anlegen (kostenlos), **Workers & Pages → Create → Connect
+   to Git**, das Repository `nexuslead-website` auswählen.
+2. Einstellungen:
+   - **Build command:** leer lassen (kein Framework, kein Build-Schritt nötig)
+   - **Deploy command:** `npx wrangler deploy`
+   - **Root directory:** `/`
+   - **Build variables:** keine nötig
+3. Deploy. Die `wrangler.jsonc` im Repo enthält bereits `assets.directory: "./"`
+   – Wrangler lädt die Website-Dateien als statische Assets hoch. Erkennbar an
+   einer Zeile wie „Uploading … / Deployed …“ im Build-Log; ein Log, das nur
+   den Deploy-Befehl ausführt und sofort „Success“ meldet **ohne** eine
+   `*.workers.dev`-Adresse zu nennen, hat nichts hochgeladen – dann fehlt meist
+   die `wrangler.jsonc` oder das Deploy-Command-Feld ist falsch gesetzt (z. B.
+   nur `.` statt `npx wrangler deploy`).
+4. Die Seite ist danach unter einer `*.workers.dev`-Adresse erreichbar – dort
+   zuerst beide Sprachen, die Demo und `impressum.html`/`datenschutz.html`
+   prüfen.
+
+Statische Auslieferung ist bei Cloudflare unbegrenzt und kostenlos, auch über
+Workers-Static-Assets. GitHub Pages wäre technisch möglich, die
+Nutzungsbedingungen schränken den Betrieb kommerzieller Seiten aber ein –
+deshalb GitHub für den Quellcode, Cloudflare für die Auslieferung.
 
 ## Schritt 3: Domain zu Cloudflare
 
@@ -63,8 +81,9 @@ für kostenlose E-Mail-Weiterleitung):
 
 ## Schritt 4: Adressen verbinden
 
-1. Im Pages-Projekt unter **Custom domains** `dentalboost.nexuslead.net`
-   hinzufügen. Cloudflare legt den DNS-Eintrag automatisch an.
+1. Im Worker-Projekt unter **Settings → Domains & Routes → Custom domains**
+   `dentalboost.nexuslead.net` hinzufügen. Cloudflare legt den DNS-Eintrag
+   automatisch an.
 2. Für die Hauptdomain eine **Redirect Rule** anlegen
    (*Rules → Redirect Rules → Create*):
    - Wenn `Hostname gleich nexuslead.net`
