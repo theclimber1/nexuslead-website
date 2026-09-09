@@ -52,6 +52,8 @@ Repository (liegt bereits bei: `wrangler.jsonc`, `.assetsignore`, `404.html`).
    - **Deploy command:** `npx wrangler deploy`
    - **Root directory:** `/`
    - **Build variables:** keine nötig
+   - Änderungen mit **Save changes** speichern und danach **Retry deployment**
+     ausführen.
 3. Deploy. Die `wrangler.jsonc` im Repo enthält bereits `assets.directory: "./"`
    – Wrangler lädt die Website-Dateien als statische Assets hoch. Erkennbar an
    einer Zeile wie „Uploading … / Deployed …“ im Build-Log; ein Log, das nur
@@ -80,13 +82,24 @@ für kostenlose E-Mail-Weiterleitung):
 
 ## Schritt 4: Adressen verbinden
 
-1. Im Worker-Projekt unter **Settings → Domains & Routes → Custom domains**
-   `nexuslead.net` hinzufügen. Cloudflare verbindet die Apex-Domain direkt mit
-   dem Worker. Falls noch alte A- oder AAAA-Einträge für `nexuslead.net`
-   vorhanden sind, diese nach dem Hinzufügen der Custom Domain entfernen,
-   sofern sie nicht für einen anderen Dienst benötigt werden.
-2. HTTPS prüfen: Cloudflare stellt das Zertifikat automatisch aus. Die
+1. Zuerst sicherstellen, dass der Worker erfolgreich deployed ist. Unter
+   **Workers & Pages → dentalboost-nexuslead-website → Domains & Routes** die
+   Custom Domain `nexuslead.net` hinzufügen.
+2. Falls du stattdessen in der Domainübersicht den Hinweis **No Workers
+   connected** siehst, bei **DNS → DNS Records → Connect Worker** den bereits
+   vorhandenen Worker `dentalboost-nexuslead-website` auswählen und verbinden.
+   Nicht nur einen neuen Worker anlegen.
+3. Cloudflare übernimmt die Verbindung der Apex-Domain. Vorher keine alten
+   A- oder AAAA-Einträge löschen, damit die Domain nicht zusätzlich ausfällt;
+   nach erfolgreicher Worker-Verbindung dürfen unbenötigte alte Origin-Einträge
+   entfernt werden.
+4. HTTPS prüfen: Cloudflare stellt das Zertifikat automatisch aus. Die
    SSL-Option von Namecheap wird nicht benötigt.
+
+Ein **522 Connection timed out** bedeutet in diesem Aufbau, dass Cloudflare
+die Domain erreicht, aber der bisherige Origin-Server nicht antwortet. Solange
+im DNS-Bereich **No Workers connected** steht, ist die Website noch nicht mit
+dem Worker verbunden.
 
 ## Schritt 5 (optional): E-Mail unter der Domain
 
