@@ -2,7 +2,7 @@ let language = 'de';
 // Authored translations only; visitor input is never inserted as HTML.
 const english = {
   '.skip-link': ['Skip to content'],
-  '.header nav a': ['Your benefits', 'How it works', 'Compatibility', 'FAQ'],
+  '.header nav a': ['Your benefits', 'Features', 'How it works', 'Compatibility', 'FAQ'],
   '.header .button': ['Request a demo <span aria-hidden="true">↗</span>'],
   '.hero-copy .eyebrow': ['<span class="dot"></span> For dental practices in Austria'],
   'h1': ['More clarity.<br>Fewer <span class="accent">oversights.</span>'],
@@ -57,6 +57,15 @@ const english = {
   '.closing-note': ['One billing period free · Please do not send patient data by email.'],
   '.footer>p:not(.disclaimer)': ['A product of Nexus Lead FlexCo.'],
   '.footer>span': ['For dental practices in Austria'],
+  '.showcase-caption': ['Screenshot of the actual DentalBoost software · example data is fictional'],
+  '#funktionen .eyebrow': ['More than review suggestions', 'Statistics', 'Implant register'],
+  '#funktionen h2': ['The overview you would otherwise<br>have to piece together yourself.'],
+  '.feature-row:nth-child(1) h3': ['Your practice, year over year.'],
+  '.feature-row:nth-child(1) .feature-text>p:not(.eyebrow)': ['This quarter against the same quarter last year, this year against last year — or any period you choose. Private and insurer billing shown separately, broken down by service, with a bar chart and trend line.'],
+  '.feature-row:nth-child(1) .feature-tags span': ['Any time period', 'Private vs. insurer'],
+  '.feature-row:nth-child(2) h3': ['Implants, from insertion to follow-up.'],
+  '.feature-row:nth-child(2) .feature-text>p:not(.eyebrow)': ['DentalBoost automatically detects from the billing data when and where an implant was placed. Add insertion torque, depth and the clinical course directly to it — including complications and loss tracking per surgeon.'],
+  '.feature-row:nth-child(2) .feature-tags span': ['Detects insertions automatically', 'Loss only with your confirmation'],
   '.legal-links a': ['Imprint', 'Privacy'],
   '.disclaimer': ['DentalBoost provides review suggestions. Your practice remains responsible for professional assessment and billing.']
 };
@@ -69,6 +78,14 @@ const accessibleLabels = [
   const element = document.querySelector(selector);
   return { element, de: element.getAttribute('aria-label'), en };
 });
+const altTexts = [
+  ['.showcase-hero img', 'Screenshot of the DentalBoost software: analysis overview with review-potential figures'],
+  ['.feature-row:nth-child(1) img', 'Screenshot: statistics view with year-over-year comparison figures and a bar chart per service'],
+  ['.feature-row:nth-child(2) img', 'Screenshot: implant register with a detected insertion, surgeon statistics and the implant list'],
+].map(([selector, en]) => {
+  const element = document.querySelector(selector);
+  return { element, de: element.getAttribute('alt'), en };
+});
 const germanTitle = document.title;
 const description = document.querySelector('meta[name="description"]');
 const germanDescription = description.content;
@@ -79,6 +96,7 @@ document.querySelector('.language-switch').addEventListener('click', event => {
   document.documentElement.lang = language === 'de' ? 'de-AT' : 'en';
   for (const translation of translations) translation.element.innerHTML = translation[language];
   for (const label of accessibleLabels) label.element.setAttribute('aria-label', label[language]);
+  for (const alt of altTexts) alt.element.setAttribute('alt', alt[language]);
   document.title = language === 'de' ? germanTitle : 'DentalBoost — More clarity. Fewer oversights.';
   description.content = language === 'de' ? germanDescription : 'DentalBoost helps Austrian dental practices review billing: spot potentially missing items, understand suggestions and analyse reports locally.';
   contactCta.href = language === 'de' ? germanContactUrl : 'mailto:nexuslead.austria@gmail.com?subject=' + encodeURIComponent('DentalBoost demo request') + '&body=' + encodeURIComponent('Hello,\n\nI am interested in a DentalBoost demo.\n\nPractice: \nPractice software: \nPreferred times: \n\nKind regards');
